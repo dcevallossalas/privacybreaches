@@ -8,7 +8,7 @@ This research is part of the project "Híper-transparencia Digital en Ecuador: E
 
 - **Main project:** Híper-transparencia Digital en Ecuador: El Gobierno Electrónico contra la Privacidad.
 - **Main project reference:** PII-DETRI-2022-01.
-- **Date:** 2025-04-11
+- **Date:** 2025-04-11.
 
 ## How to use this repository?
 
