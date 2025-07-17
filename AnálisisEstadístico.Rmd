@@ -1,0 +1,319 @@
+---
+title: "Transparency Unleashed: Privacy Risks in the Age of E-Government"
+author: "Cristian Paguay-Chimarro, David Cevallos-Salas, Ana Rodríguez-Hoyos, José Estrada-Jiménez"
+output: html_notebook
+---
+
+
+```{r}
+library(ggplot2)
+library(viridis)
+palette <- viridis(3, alpha= 1, begin = 0.5, end = 0.75, direction = 1, option="viridis")
+
+```
+
+```{r}
+
+
+years = c(2008,2010,2012,2014,2016,2018,2020,2022,2024)
+osi = c(0.44,0.32,0.46,0.48,0.63,0.73,0.81,0.85,0.89)
+
+Indicators = data.frame(years,osi)
+
+picture_osi <- ggplot(Indicators, aes(x = years, y = osi))+
+  geom_line( color="orange") +
+  geom_point(size=4, shape=22, color="orange", fill="orange")+
+  labs( x= "Year", y = "OSI index")+
+  theme(text = element_text(size = 16))+
+  geom_text(aes(label=osi), vjust=-1.2, hjust=0.5, color="black", size=4.5)+
+  xlim(2008,2022)+
+  ylim(0,1)+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_x_continuous(breaks = years)
+
+print(picture_osi)
+
+egdi = c(0.48,0.43,0.49,0.51,0.56,0.61,0.7,0.74,0.78)
+
+Indicators$egdi = egdi
+
+picture_egdi <- ggplot(Indicators, aes(x = years, y = egdi))+
+  geom_line( color="blue") +
+  geom_point(size=4, shape=22, color="blue", fill="blue")+
+  labs( x= "Year", y = "EGDI index")+
+  theme(text = element_text(size = 16))+
+  geom_text(aes(label=egdi), vjust=-1.2, hjust=0.5, color="black", size=4.5)+
+  xlim(2008,2022)+
+  ylim(0,1)+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_x_continuous(breaks = years)
+
+print(picture_egdi)
+
+
+```
+
+
+
+```{r}
+institutions = c("Direccion Nacional de Registros Públicos"
+,"Ministerio de Defensa"
+,"Corporación Nacional de Telecomunicaciones"
+,"Asociación de Municipalidades Ecuatorianas"
+,"Ministerio de Trabajo"
+,"Agencia Metropolitana de Tránsito"
+,"Ministerio de Inclusión Económica y Social"
+,"Instituto Ecuatoriano de Seguridad Social"
+,"Ministerio de Salud Pública"
+,"Superintendencia de Compañías"
+,"Agencia Nacional de Tránsito"
+,"Servicio Nacional de Aduana del Ecuador"
+,"Ministerio de Gobierno"
+,"Municipio de Quito"
+,"Fiscalía General del Estado"
+,"Ministerio de Educación"
+,"Servicio Nacional de Educación Superior"
+,"Consejo de la Judicatura"
+,"Contraloría General del Estado"
+,"Servicio de Rentas Internas"
+,"Registro Civil")
+
+institutions = factor(rep(institutions,2),levels=institutions)
+
+scores = c(1,2,3,5,4,11,6,7,7,10,12,11,12,14,13,11,13,12,19,25,21,
+1,2,3,4,4,6,6,7,7,8,8,8,11,11,11,11,11,12,17,18,19)
+
+types = c(rep("items",21),rep("data",21))
+types = factor(types, levels= c("items","data"))
+Entities = data.frame(institutions, scores, types)
+
+margin_spacer <- function(x) {
+  # where x is the column in your dataset
+  left_length <- nchar(levels(factor(x)))[1]
+  if (left_length > 8) {
+    return((left_length - 8) * 4)
+  }
+  else
+    return(0)
+}
+
+picture1 = ggplot(data=Entities, aes(x=institutions, y=scores, fill=types)) +
+  geom_bar(stat="identity", position=position_dodge(width=0.9), width=0.9)+
+  geom_text(aes(label=scores), position=position_dodge(width=0.9), vjust=-0.5, hjust=0.5, color="black", size=3.5)+
+  theme(axis.text.x = element_text(angle = 65, hjust = 1), plot.margin = margin(l = 0 + margin_spacer(Entities$institutions)))+
+  labs(title = "", x = "Public institution", y = "Number")+
+  scale_y_continuous(limits=c(0,26),breaks=c(5,10,15,20,25))+
+  scale_fill_manual(values = palette, labels=c("Personal data", "Subcategories"),name="")
+
+print(picture1)
+```
+
+```{r}
+category = c("Immigration status","Ethnicity","Judicial","Health")
+category = factor(category,levels=category)
+
+numbers = c(1,1,5,8)
+
+Values = data.frame(category,numbers)
+
+picture2 = ggplot(data=Values, aes(x=category, y=numbers)) +
+  geom_bar(stat="identity", fill=palette[1])+
+  geom_text(aes(label=numbers), vjust=-0.5, hjust=0.5, color="black", size=4.5)+
+  theme(axis.text.x = element_text(angle = 65, hjust = 1),text = element_text(size = 14))+
+  labs(title = "", x = "Sensitive personal data category", y = "Number of public institutions")+
+  scale_y_continuous(limits=c(0,9),breaks=c(2,4,6,8))+
+  theme(legend.position="bottom")
+
+print(picture2)
+```
+
+```{r}
+institutions = c("Agencia Nacional de Tránsito"
+                 ,"Instituto Ecuatoriano de Seguridad Social"
+                 ,"Secretaría Nacional de Educación Superior"
+                 , "Servicio de Rentas Internas"
+                 ,"Superintendencia de Compañías"
+                 ,"Consejo de la Judicatura"
+                 ,"Ministerio de Gobierno"
+                 ,"Fiscalía General del Estado"
+                 ,"Ministerio de Salud Pública"
+                 ,"Servicio Nacional de Aduana del Ecuador")
+
+institutions = factor(rep(institutions,2),levels=institutions)
+
+scores = c(2,1,1,1,1,5,3,6,4,4,
+          1,1,1,1,1,2,3,4,4,4)
+types = c(rep("items",10),rep("data",10))
+
+types = factor(types, levels= c("items","data"))
+Entities = data.frame(institutions, scores, types)
+
+picture3 = ggplot(data=Entities, aes(x=institutions, y=scores, fill=types)) +
+  geom_bar(stat="identity", position="dodge", )+
+  geom_text(aes(label=scores), position=position_dodge(width=0.9), vjust=-0.5, hjust=0.5, color="black", size=4.5)+
+  theme(axis.text.x = element_text(angle = 65, hjust = 1))+
+  labs(title = "", x = "Public institution", y = "Number")+
+  scale_y_continuous(limits=c(0,6.5),breaks=c(1,2,3,4,5,6))+
+  scale_fill_manual(values = palette, labels=c("Sensitive personal data", "Sensitive personal data categories"),name="")
+
+print(picture3)
+
+
+```
+
+```{r}
+
+institutions = c("Dirección Nacional de Registros Públicos"
+,"Municipio de Quito"
+,"Ministerio de Defensa"
+,"Servicio Nacional de Aduana del Ecuador"
+,"Instituto Ecuatoriano de Seguridad Social"
+,"Ministerio de Gobierno"
+,"Ministerio de Inclusión Económica y Social"
+,"Ministerio del Trabajo"
+,"Servicio de Rentas Internas"
+,"Ministerio de Salud pública"
+,"Ministerio de Educación"
+,"Registro Civil")
+
+institutions = factor(rep(institutions,2),levels=institutions)
+
+scores = c(1,1,2,2,4,4,4,4,6,7,11,16,
+1,1,2,2,4,4,4,4,6,7,11,14)
+
+types = c(rep("items",12),rep("data",12))
+types = factor(types, levels= c("items","data"))
+Entities = data.frame(institutions, scores, types)
+
+picture4 = ggplot(data=Entities, aes(x=institutions, y=scores, fill=types)) +
+  geom_bar(stat="identity", position="dodge", )+
+  geom_text(aes(label=scores), position=position_dodge(width=0.9), vjust=-0.5, hjust=0.5, color="black", size=4.5)+
+  theme(axis.text.x = element_text(angle = 65, hjust = 1),plot.margin = margin(l = 0 + margin_spacer(Entities$institutions)))+
+  labs(title = "", x = "Public institution", y = "Number")+
+  scale_y_continuous(limits=c(0,16.5),breaks=c(2,4,6,8,10,12,14,16))+
+  scale_fill_manual(values = palette, labels=c("Personal data", "Subcategories"),name="")
+
+print(picture4)
+
+```
+
+```{r}
+
+category = c("Judicial",
+"Location",
+"Job",
+"Health",
+"Educaton",
+"Identification",
+"Heritage",
+"Demography")
+
+category = factor(rep(category,2),levels=category)
+
+scores = c(8,6,11,11,13,12,26,23,
+5,5,9,9,9,9,15,16)
+
+types = c(rep("items",8),rep("data",8))
+types = factor(types, levels= c("items","data"))
+
+Categories = data.frame(category, scores, types)
+
+picture5 = ggplot(data=Categories, aes(x=category, y=scores, fill=types)) +
+  geom_bar(stat="identity", position="dodge" )+
+  geom_text(aes(label=scores), position=position_dodge(width=0.9), vjust=-0.5, hjust=0.5, color="black", size=4.5)+
+  theme(axis.text.x = element_text(angle = 65, hjust = 1),text = element_text(size = 16))+
+  labs(title = "", x = "Category", y = "Number")+
+  scale_y_continuous(limits=c(0,28), breaks=c(3,6,9,12,15,18,21,24,27))+
+  scale_fill_manual(values = palette, labels=c("Personal data", "Subcategories"),name="")+
+  theme(legend.position="bottom")
+
+print(picture5)
+```
+
+```{r}
+category = c("Owner",
+"Third parties",
+"Relatives")
+
+category = factor(rep(category,3),levels=category)
+
+scores = c(77,51,23,
+63,16,3,
+21,8,3
+)
+
+types = c(rep("data",3),rep("systems",3),rep("institutions",3))
+types = factor(types, levels= c("data","systems","institutions"))
+
+Categories = data.frame(category, scores, types)
+
+picture6 = ggplot(data=Categories, aes(x=category, y=scores, fill=types)) +
+  geom_bar(stat="identity", position="dodge" )+
+  geom_text(aes(label=scores), position=position_dodge(width=0.9), vjust=-0.5, hjust=0.5, color="black", size=4.5)+
+  theme(axis.text.x = element_text(angle = 65, hjust = 1),
+        text = element_text(size = 16))+
+  labs(title = "", x = "Individual", y = "Number")+
+  scale_y_continuous(limits=c(0,90))+
+  scale_fill_manual(values = palette, labels=c("Subcategories", "Open access systems", "Public institutions"),name="")+
+  theme(legend.position="bottom")
+
+print(picture6)
+
+```
+
+
+```{r}
+article= c("n","c","j","b")
+article = factor(rep(article,2),levels=article)
+
+scores = c(5,12,7,9,5,6,6,9)
+
+types = c(rep("items",4),rep("data",4))
+types = factor(types, levels= c("items","data"))
+
+Articles= data.frame(article, scores, types)
+
+picture7 = ggplot(data=Articles, aes(x=article, y=scores, fill=types)) +
+  geom_bar(stat="identity", position="dodge" )+
+  geom_text(aes(label=scores), position=position_dodge(width=0.9), vjust=-0.5, hjust=0.5, color="black", size=4.5)+
+  labs(title = "", x = "LOTAIP Article 7 literal", y = "Number")+
+  scale_fill_manual(values = palette, labels=c("Personal data","Subcategories"),name="")+
+  scale_y_continuous(limits=c(0,13),breaks=c(1,3,5,7,9,11,13))+
+  theme(text = element_text(size = 16))+
+theme(legend.position="bottom")
+
+print(picture7)
+```
+
+
+```{r}
+category = c(
+"Demography",
+"Judicial",
+"Heritage",
+"Location",
+"identification",
+"Job")
+
+category = factor(rep(category,2),levels=category)
+
+scores = c(2,2,9,3,8,9,
+1,2,2,3,4,5)
+
+types = c(rep("items",6),rep("data",6))
+types = factor(types, levels= c("items","data"))
+
+Categories = data.frame(category, scores, types)
+
+picture8 = ggplot(data=Categories, aes(x=category, y=scores, fill=types)) +
+  geom_bar(stat="identity", position="dodge" )+
+  geom_text(aes(label=scores), position=position_dodge(width=0.9), vjust=-0.5, hjust=0.5, color="black", size=4.5)+
+  theme(axis.text.x = element_text(angle = 65, hjust = 1),text = element_text(size = 16))+
+  labs(title = "", x = "Category", y = "Number")+
+  scale_fill_manual(values = palette, labels=c("Personal data", "Subcategories"),name="")+
+  scale_y_continuous(limits=c(0,10),breaks=c(2,4,6,8,10))+
+  theme(legend.position="bottom")
+
+print(picture8)
+```
+
