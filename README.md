@@ -1,6 +1,6 @@
 # Transparency Unleashed: Privacy Risks in the Age of E-Government
 
-This repository provides all the files and elements required for experiments reproducibility of the research project: "Transparency Unleashed: Privacy Risks in the Age of E-Government".
+This repository aims to allow the experiments reproducibility of the research project: "Transparency Unleashed: Privacy Risks in the Age of E-Government".
 
 This research is part of the project "Híper-transparencia Digital en Ecuador: El Gobierno Electrónico contra la Privacidad” conducted by Escuela Politécnica Nacional.
 
